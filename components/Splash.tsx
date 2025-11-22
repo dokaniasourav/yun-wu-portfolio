@@ -1,0 +1,58 @@
+
+import React, { useState, useEffect } from 'react';
+import Typewriter from './Typewriter';
+import { ChevronDown } from 'lucide-react';
+import { TYPOGRAPHY, COLORS } from '../styles';
+
+interface SplashProps {
+  isVisible: boolean;
+  onDismiss: () => void;
+}
+
+const Splash: React.FC<SplashProps> = ({ isVisible, onDismiss }) => {
+  // Key to force re-render (and thus reset) of Typewriter component
+  const [typewriterKey, setTypewriterKey] = useState(0);
+
+  useEffect(() => {
+    // When splash becomes visible, increment key to restart typing animation
+    if (isVisible) {
+      setTypewriterKey(prev => prev + 1);
+    }
+  }, [isVisible]);
+
+  return (
+    <div 
+      className={`fixed inset-0 z-50 bg-white flex flex-col items-center justify-between py-16 md:py-24 transition-transform duration-[800ms] cubic-bezier(0.77, 0, 0.175, 1) ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
+      {/* Top Section: Main Title */}
+      <div className="flex-grow flex flex-col justify-center items-center w-full max-w-[90%]">
+        <h1 className={TYPOGRAPHY.splashTitle}>
+          YUN DESIGN PORTFOLIO
+        </h1>
+      </div>
+
+      {/* Bottom Section: Typewriter Text */}
+      <div className="w-full max-w-6xl px-6 flex flex-col items-center mb-12 md:mb-20">
+        <div className={`text-lg md:text-2xl text-darkgray font-serif tracking-wide text-center min-h-[3rem]`}>
+          <Typewriter 
+            key={typewriterKey}
+            text="Hi Yun 专注于视觉叙事、创意影像和艺术表达。" 
+            startDelay={800}
+          />
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 animate-bounce cursor-pointer" onClick={onDismiss}>
+        <div className={`flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity`}>
+          <span className={TYPOGRAPHY.small + " text-gray-400"}>Scroll to Enter</span>
+          <ChevronDown className={COLORS.coral} size={24} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Splash;
