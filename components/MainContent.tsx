@@ -40,7 +40,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
   const getCenterTitle = () => {
     switch (activeView) {
       case ViewState.ABOUT:
-        return 'About Me';
+        return 'About';
       case ViewState.PROJECT_FLOW:
         return 'Project Flow';
       case ViewState.PHOTOGRAPHY:
@@ -88,7 +88,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
               <h1 className={`${TYPOGRAPHY.h1} group-hover:opacity-90 transition-opacity whitespace-nowrap`}>
                 {getCenterTitle()}
               </h1>
-              <div className="w-32 md:w-64 mt-4 mx-auto opacity-60">
+              <div className="w-32 md:w-64 mt-4 mx-auto opacity-90">
                 <WaveDecoration />
               </div>
             </button>

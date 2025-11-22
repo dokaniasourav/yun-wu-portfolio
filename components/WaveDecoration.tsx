@@ -2,15 +2,16 @@ import React from 'react';
 
 export const WaveDecoration: React.FC<{ className?: string }> = ({ className }) => (
   <svg
-    viewBox="0 0 500 50"
+    viewBox="0 0 400 60"
     preserveAspectRatio="none"
-    className={`w-full h-auto opacity-20 ${className}`}
+    className={`w-full h-auto opacity-40 ${className}`}
   >
     <path
-      d="M0,25 C100,50 200,0 300,25 C400,50 500,0 600,25 L600,50 L0,50 Z"
+      d="M0,30 C100,55 300,5 400,30"
       fill="transparent"
       stroke="#ff6b6b"
-      strokeWidth="2"
+      strokeWidth="3"
+      strokeLinecap="round"
     />
   </svg>
 );

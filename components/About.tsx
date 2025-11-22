@@ -6,8 +6,8 @@ const About: React.FC = () => {
   return (
     <div id="about-root" data-debug="about-root" className="w-full">
       <div id="about-header" data-debug="about-header" className="text-center mb-16">
-        <h2 className={TYPOGRAPHY.h2}>About Yun</h2>
-        <div className="h-1 w-16 bg-coral mx-auto rounded-full mb-8"></div>
+        {/* <h2 className={TYPOGRAPHY.h2}>About Yun</h2> */}
+        {/* <div className="h-1 w-16 bg-coral mx-auto rounded-full mb-8"></div> */}
         <p className={`${TYPOGRAPHY.body} ${COLORS.gray600}`}>
           "I focus on visual storytelling through photography and interactive design.
           Based in Seattle, I explore the intersection of nature, technology, and human emotion."
