@@ -83,7 +83,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
           </nav>
 
           {/* Center Column: Title */}
-          <div className="flex flex-col items-center justify-center md:-mt-4">
+          <div className="flex flex-col items-center justify-center h-full">
             <button onClick={() => onNavigate(ViewState.HOME)} className="text-center group">
               <h1 className={`${TYPOGRAPHY.h1} group-hover:opacity-90 transition-opacity whitespace-nowrap`}>
                 {getCenterTitle()}
