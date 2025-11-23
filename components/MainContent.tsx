@@ -44,7 +44,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
       case ViewState.PROJECT_FLOW:
         return 'Project Flow';
       case ViewState.PHOTOGRAPHY:
-        return 'Visual Narratives';
+        return 'Gallery';
       case ViewState.HOME:
       default:
         return 'Yun Wu';
