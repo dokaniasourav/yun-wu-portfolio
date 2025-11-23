@@ -62,17 +62,18 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
         <ContactRow label="Send Email" value="Yunwustudio@gmail.com" href="mailto:Yunwustudio@gmail.com" />
         <ContactRow label="Call, text, WhatsApp" value="+1 4258372524" href="tel:+14258372524" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-transparent pb-2">
+          <span className={`font-sans text-xl md:text-2xl font-light ${COLORS.gray500}`}>
+            Currently based in Seattle, WA
+          </span>
+          <span className={`font-sans text-lg md:text-xl font-light leading-relaxed text-coral font-mono mt-2 md:mt-0`}>
+            {currentTime}
+          </span>
+        </div>
       </div>
 
       {/* Location / Time Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between">
-        <span className={`font-sans text-lg md:text-xl font-light leading-relaxed ${COLORS.gray400}`}>
-          Currently based in Seattle, WA
-        </span>
-        <span className={`font-sans text-lg md:text-xl font-light leading-relaxed text-coral font-mono mt-2 md:mt-0`}>
-          {currentTime}
-        </span>
-      </div>
+
     </div>
   );
 };
