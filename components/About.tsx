@@ -48,11 +48,6 @@ const About: React.FC = () => {
         </div>
 
       </div>
-
-      <div id="about-footer" data-debug="about-footer" className={`mt-16 pt-8 border-t border-gray-100 flex justify-between ${TYPOGRAPHY.small} ${COLORS.gray400}`}>
-        <span>Seattle, WA</span>
-        <span>Available for freelance</span>
-      </div>
     </div>
   );
 };

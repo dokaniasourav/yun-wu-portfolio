@@ -57,14 +57,15 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
     <div id="home-root" data-debug="home-root" className="flex flex-col justify-end space-y-8 md:space-y-10 w-full min-h-[40vh]">
       {/* Navigation and Contact Rows */}
       <div className="flex flex-col space-y-4">
-        <NavRow label="Photography" onClick={() => onNavigate(ViewState.PHOTOGRAPHY)} />
         <NavRow label="Design" onClick={() => { }} />
-        <ContactRow label="Call, text, WhatsApp" value="+1 4258372524" href="tel:+14258372524" />
+        <NavRow label="Photography" onClick={() => onNavigate(ViewState.PHOTOGRAPHY)} />
+
         <ContactRow label="Send Email" value="Yunwustudio@gmail.com" href="mailto:Yunwustudio@gmail.com" />
+        <ContactRow label="Call, text, WhatsApp" value="+1 4258372524" href="tel:+14258372524" />
       </div>
 
       {/* Location / Time Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pt-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
         <span className={`font-sans text-lg md:text-xl font-light leading-relaxed ${COLORS.gray400}`}>
           Currently based in Seattle, WA
         </span>
