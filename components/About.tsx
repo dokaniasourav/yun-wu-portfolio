@@ -19,7 +19,7 @@ const About: React.FC = () => {
           My past experience communicating with clients has made me skilled at understanding their needs and helping them find the solutions they're looking for. Using that insight as a foundation is one of the ways I want to dedicate myself to my craft. The experience I've gained from working as a consultant has strengthened my ability to approach and solve problems, and I know this journey will continue to be both rewarding and exciting.
         </p>
         <blockquote className="border-l-4 border-coral pl-4 italic text-gray-700 my-8 bg-gray-50 py-4 pr-4 rounded-r-lg">
-          "Design is not just what it looks like and feels like. Design is how it works." <cite className="text-sm not-italic text-gray-500 ml-3"> — Steve Jobs!</cite>
+          "Design is not just what it looks like and feels like. Design is how it works." <cite className="text-sm not-italic text-gray-500 ml-3"> — Steve Jobs.</cite>
         </blockquote>
         <img src="images/about-page-yun.jpg" alt="Yun Wu" className="w-full rounded-lg my-4" />
         <p className={`${TYPOGRAPHY.bodySmall} mb-6`}>
