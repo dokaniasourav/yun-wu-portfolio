@@ -1,7 +1,7 @@
 
 
-import React, { useEffect, useRef } from 'react';
-import { TYPOGRAPHY, LAYOUT, COLORS } from '../styles';
+import React, { useEffect, useRef, useState } from 'react';
+import { TYPOGRAPHY, COLORS } from '../styles';
 
 // Portrait-oriented photos for waterfall layout with metadata
 const photoAssets = [
@@ -26,79 +26,83 @@ const photoAssets = [
 ];
 
 const Photography: React.FC = () => {
-  const leftColumnRef = useRef<HTMLDivElement>(null);
-  const rightColumnRef = useRef<HTMLDivElement>(null);
-  const leftScrollPositionRef = useRef(0);
-  const rightScrollPositionRef = useRef(0);
-  const leftAnimatingRef = useRef(true);
-  const rightAnimatingRef = useRef(true);
+  const [columnCount, setColumnCount] = useState(2);
+  const [isVisible, setIsVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const columnRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollPositions = useRef<number[]>([0, 0, 0, 0]);
+  const animating = useRef<boolean[]>([true, true, true, true]);
   const initializedRef = useRef(false);
 
   useEffect(() => {
-    let animationFrameId: number;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
 
-    // Initialize right column to start from middle of content (so content is above viewport)
-    if (!initializedRef.current && rightColumnRef.current) {
-      const rightHeight = rightColumnRef.current.scrollHeight / 3;
-      rightScrollPositionRef.current = -rightHeight;
-      rightColumnRef.current.style.transform = `translateY(${rightScrollPositionRef.current}px)`;
-      initializedRef.current = true;
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
 
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateColumnCount = () => {
+      if (window.matchMedia('(min-width: 1024px)').matches) {
+        setColumnCount(4);
+      } else if (window.matchMedia('(min-width: 768px)').matches) {
+        setColumnCount(3);
+      } else {
+        setColumnCount(2);
+      }
+    };
+
+    updateColumnCount();
+    window.addEventListener('resize', updateColumnCount);
+    return () => window.removeEventListener('resize', updateColumnCount);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let animationFrameId: number;
+
     const animate = () => {
-      if (leftColumnRef.current && leftAnimatingRef.current) {
-        // Left column scrolls up
-        leftScrollPositionRef.current -= 0.5;
-        const leftHeight = leftColumnRef.current.scrollHeight / 3;
+      for (let i = 0; i < columnCount; i++) {
+        const colRef = columnRefs.current[i];
+        if (colRef && animating.current[i]) {
+          const direction = i % 2 === 0 ? -0.5 : 0.5;
+          scrollPositions.current[i] += direction;
+          const colHeight = colRef.scrollHeight / 3;
 
-        if (Math.abs(leftScrollPositionRef.current) >= leftHeight) {
-          leftScrollPositionRef.current = 0;
+          if (direction < 0 && Math.abs(scrollPositions.current[i]) >= colHeight) {
+            scrollPositions.current[i] = 0;
+          } else if (direction > 0 && scrollPositions.current[i] >= 0) {
+            scrollPositions.current[i] = -colHeight;
+          }
+
+          colRef.style.transform = `translateY(${scrollPositions.current[i]}px)`;
         }
-        leftColumnRef.current.style.transform = `translateY(${leftScrollPositionRef.current}px)`;
       }
-
-      if (rightColumnRef.current && rightAnimatingRef.current) {
-        // Right column scrolls down
-        rightScrollPositionRef.current += 0.5;
-        const rightHeight = rightColumnRef.current.scrollHeight / 3;
-
-        // Loop back when reaching the starting position
-        if (rightScrollPositionRef.current >= 0) {
-          rightScrollPositionRef.current = -rightHeight;
-        }
-        rightColumnRef.current.style.transform = `translateY(${rightScrollPositionRef.current}px)`;
-      }
-
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    const handleLeftMouseEnter = () => {
-      leftAnimatingRef.current = false;
-    };
-
-    const handleLeftMouseLeave = () => {
-      leftAnimatingRef.current = true;
-    };
-
-    const handleRightMouseEnter = () => {
-      rightAnimatingRef.current = false;
-    };
-
-    const handleRightMouseLeave = () => {
-      rightAnimatingRef.current = true;
-    };
-
-    const leftContainer = leftColumnRef.current?.parentElement;
-    const rightContainer = rightColumnRef.current?.parentElement;
-
-    if (leftContainer) {
-      leftContainer.addEventListener('mouseenter', handleLeftMouseEnter);
-      leftContainer.addEventListener('mouseleave', handleLeftMouseLeave);
-    }
-
-    if (rightContainer) {
-      rightContainer.addEventListener('mouseenter', handleRightMouseEnter);
-      rightContainer.addEventListener('mouseleave', handleRightMouseLeave);
+    if (!initializedRef.current && columnCount > 1) {
+      for (let i = 0; i < columnCount; i++) {
+        if (i % 2 === 1 && columnRefs.current[i]) {
+          const colHeight = columnRefs.current[i]!.scrollHeight / 3;
+          scrollPositions.current[i] = -colHeight;
+          columnRefs.current[i]!.style.transform = `translateY(${scrollPositions.current[i]}px)`;
+        }
+      }
+      initializedRef.current = true;
     }
 
     animationFrameId = requestAnimationFrame(animate);
@@ -107,82 +111,61 @@ const Photography: React.FC = () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
-      if (leftContainer) {
-        leftContainer.removeEventListener('mouseenter', handleLeftMouseEnter);
-        leftContainer.removeEventListener('mouseleave', handleLeftMouseLeave);
-      }
-      if (rightContainer) {
-        rightContainer.removeEventListener('mouseenter', handleRightMouseEnter);
-        rightContainer.removeEventListener('mouseleave', handleRightMouseLeave);
-      }
     };
-  }, []);
+  }, [columnCount, isVisible]);
 
-  // Split photos into two separate columns (first 9 and last 9) and triple them for infinite scroll
-  const leftPhotos = [...photoAssets.slice(0, 9), ...photoAssets.slice(0, 9), ...photoAssets.slice(0, 9)];
-  const rightPhotos = [...photoAssets.slice(9, 18), ...photoAssets.slice(9, 18), ...photoAssets.slice(9, 18)];
+  const splitPhotosIntoColumns = (count: number) => {
+    const columns: (typeof photoAssets)[] = Array.from({ length: count }, () => []);
+    photoAssets.forEach((photo, index) => {
+      columns[index % count].push(photo);
+    });
+    return columns.map(col => [...col, ...col, ...col]);
+  };
+
+  const photoColumns = splitPhotosIntoColumns(columnCount);
+
+  const renderColumn = (photos: (typeof photoAssets), columnIndex: number) => (
+    <div key={columnIndex} className="overflow-hidden">
+      <div
+        ref={(el) => { columnRefs.current[columnIndex] = el; }}
+        className="flex flex-col gap-4"
+        onMouseEnter={() => (animating.current[columnIndex] = false)}
+        onMouseLeave={() => (animating.current[columnIndex] = true)}
+      >
+        {photos.map((photo, index) => (
+          <div
+            key={`col${columnIndex}-${photo.id}-${index}`}
+            className="rounded-lg overflow-hidden shadow-sm transition-all duration-300 group relative cursor-pointer border-2 border-transparent hover:border-gray-400"
+          >
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              className="w-full h-auto object-cover transition-opacity duration-300 group-hover:opacity-60"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/30 to-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <h3 className="text-xl font-medium text-gray-800 mb-1">{photo.title}</h3>
+              <div className="w-8 h-px bg-gray-800 my-2"></div>
+              <p className="text-sm text-gray-700 tracking-wide">{photo.artist}</p>
+              <p className="text-sm text-gray-700 tracking-wide">{photo.season}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
-    <div id="photography-root" data-debug="photography-root" className="w-full">
+    <div id="photography-root" ref={containerRef} data-debug="photography-root" className="w-full">
       <div id="photography-header" data-debug="photography-header" className="mb-12 text-center">
         <p data-debug="photography-intro" className={`${TYPOGRAPHY.body} ${COLORS.gray500}`}>
           Capturing moments of silence, texture, and light. A collection of works exploring the relationship between natural landscapes and human perception.
         </p>
       </div>
 
-      {/* Waterfall Grid with infinite scroll */}
-      <div className="grid grid-cols-2 gap-4 h-[70vh]">
-        {/* Left Column - Scrolls Up */}
-        <div className="overflow-hidden overflow-x-hidden">
-          <div ref={leftColumnRef} className="flex flex-col gap-4">
-            {leftPhotos.map((photo, index) => (
-              <div
-                key={`left-${photo.id}-${index}`}
-                className="rounded-lg overflow-hidden shadow-sm transition-all duration-300 group relative cursor-pointer border-2 border-transparent hover:border-gray-400"
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  className="w-full h-auto object-cover transition-opacity duration-300 group-hover:opacity-60"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/30 to-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <h3 className="text-xl font-medium text-gray-800 mb-1">{photo.title}</h3>
-                  <div className="w-8 h-px bg-gray-800 my-2"></div>
-                  <p className="text-sm text-gray-700 tracking-wide">{photo.artist}</p>
-                  <p className="text-sm text-gray-700 tracking-wide">{photo.season}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Column - Scrolls Down */}
-        <div className="overflow-hidden overflow-x-hidden">
-          <div ref={rightColumnRef} className="flex flex-col gap-4">
-            {rightPhotos.map((photo, index) => (
-              <div
-                key={`right-${photo.id}-${index}`}
-                className="rounded-lg overflow-hidden shadow-sm transition-all duration-300 group relative cursor-pointer border-2 border-transparent hover:border-gray-400"
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  className="w-full h-auto object-cover transition-opacity duration-300 group-hover:opacity-60"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/30 to-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <h3 className="text-xl font-medium text-gray-800 mb-1">{photo.title}</h3>
-                  <div className="w-8 h-px bg-gray-800 my-2"></div>
-                  <p className="text-sm text-gray-700 tracking-wide">{photo.artist}</p>
-                  <p className="text-sm text-gray-700 tracking-wide">{photo.season}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 h-[70vh]">
+        {photoColumns.map((photos, index) => renderColumn(photos, index))}
       </div>
     </div>
   );
