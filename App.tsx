@@ -1,13 +1,30 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import Splash from './components/Splash';
 import MainContent from './components/MainContent';
 import { ViewState } from './types';
 
-const App: React.FC = () => {
+const viewToPath: Record<ViewState, string> = {
+  [ViewState.HOME]: '/',
+  [ViewState.ABOUT]: '/about',
+  [ViewState.PROJECT_FLOW]: '/project-flow',
+  [ViewState.PHOTOGRAPHY]: '/photography',
+  [ViewState.DESIGN]: '/design',
+};
+
+const getViewFromPath = (path: string): ViewState => {
+  const entry = Object.entries(viewToPath).find(([_, p]) => p === path);
+  return entry ? (entry[0] as ViewState) : ViewState.HOME;
+};
+
+const AppContent: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(true);
-  const [activeView, setActiveView] = useState<ViewState>(ViewState.HOME);
   const [lastScrollTime, setLastScrollTime] = useState(0);
+
+  const activeView = getViewFromPath(location.pathname);
 
   // Helper to check if the event target is inside a scrollable container that isn't at the top
   const isScrollableAndNotAtTop = (target: EventTarget | null) => {
@@ -27,8 +44,8 @@ const App: React.FC = () => {
 
   // Handle Navigation Logic
   const handleNavigate = (view: ViewState) => {
-    setActiveView(view);
-    // If navigating from Splash, ensure it dismisses
+    const path = viewToPath[view];
+    navigate(path);
     if (showSplash) {
       setShowSplash(false);
     }
@@ -123,6 +140,14 @@ const App: React.FC = () => {
         />
       </div>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 };
 

@@ -102,10 +102,10 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
             <a href="mailto:Yunwustudio@gmail.com" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
               <Mail size={32} strokeWidth={1.5} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
+            <a href="https://instagram.com/yun__wu" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
               <Instagram size={32} strokeWidth={1.5} />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
+            <a href="https://linkedin.com/in/yun-w-0532b5190" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
               <Linkedin size={32} strokeWidth={1.5} />
             </a>
           </div>
@@ -152,9 +152,11 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
           <footer id="main-card-footer" className="px-8 md:px-16 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center text-gray-300 font-light mt-16">
             <div className={`${TYPOGRAPHY.body} text-lg tracking-wide text-gray-300`}>2025 Yun Wu</div>
             <div className="flex gap-8 mt-4 md:mt-0">
-              <a href="#" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>EMAIL</a>
+              <a href="mailto:Yunwustudio@gmail.com" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>EMAIL</a>
               <span className="hidden md:inline text-gray-200">|</span>
-              <a href="#" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>INSTAGRAM</a>
+              <a href="https://instagram.com/yun__wu" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>INSTAGRAM</a>
+              <span className="hidden md:inline text-gray-200">|</span>
+              <a href="https://linkedin.com/in/yun-w-0532b5190" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>LINKEDIN</a>
             </div>
           </footer>
         </div>
