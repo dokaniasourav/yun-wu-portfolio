@@ -1,5 +1,5 @@
 import React from 'react';
-import { TYPOGRAPHY, COLORS, REPETITIONS, ANIMATION_DURATION } from '../styles';
+import { TYPOGRAPHY, COLORS, MARQUEE } from '../styles';
 
 const brandLogos = [
   { name: 'BELLE', src: 'images/brand-logo/BELLE.svg' },
@@ -65,11 +65,11 @@ const About: React.FC = () => {
           <div
             className="flex whitespace-nowrap"
             style={{
-              animation: `marquee ${ANIMATION_DURATION}s linear infinite`,
-              ['--marquee-distance' as any]: `${-100 * REPETITIONS}%`,
+              animation: `marquee ${MARQUEE.ANIMATION_DURATION}s linear infinite`,
+              ['--marquee-distance' as any]: `${-100 * MARQUEE.REPETITIONS}%`,
             }}
           >
-            {Array(REPETITIONS).fill(brandLogos).flat().map((brand, index) => (
+            {Array(MARQUEE.REPETITIONS).fill(brandLogos).flat().map((brand, index) => (
               <div key={index} className="inline-flex items-center justify-center mx-16 opacity-100 min-w-[120px] flex-shrink-0">
                 <img src={brand.src} alt={brand.name} className="h-24 w-auto object-contain" />
               </div>

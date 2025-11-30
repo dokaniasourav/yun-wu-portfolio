@@ -46,17 +46,13 @@ export const TYPOGRAPHY = {
 };
 
 export const LAYOUT = {
-  // Main white card container - viewport-based width for consistency across pages
+  // Main white card container
   mainCard: 'bg-white w-[calc(100vw-2rem)] md:w-[calc(100vw-4rem)] max-w-[95rem] h-[90vh] rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col overflow-hidden relative',
-
-  // Centralized content container for page content
   contentContainer: 'w-full max-w-6xl mx-auto px-6 md:px-16 py-8',
-
-  // Flex center utility
   flexCenter: 'flex items-center justify-center',
 };
 
-export const REPETITIONS = 50;
-// Duration per repetition in seconds for animation timing
-export const DURATION_PER_REPETITION = 9;
-export const ANIMATION_DURATION = REPETITIONS * DURATION_PER_REPETITION;
+export const MARQUEE = {
+  REPETITIONS: 50,
+  ANIMATION_DURATION: 450,
+} as const;
