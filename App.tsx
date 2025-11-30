@@ -21,10 +21,18 @@ const getViewFromPath = (path: string): ViewState => {
 const AppContent: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => {
+    const saved = sessionStorage.getItem('showSplash');
+    if (saved !== null) return saved === 'true';
+    return location.pathname === '/';
+  });
   const [lastScrollTime, setLastScrollTime] = useState(0);
 
   const activeView = getViewFromPath(location.pathname);
+
+  useEffect(() => {
+    sessionStorage.setItem('showSplash', showSplash.toString());
+  }, [showSplash]);
 
   // Helper to check if the event target is inside a scrollable container that isn't at the top
   const isScrollableAndNotAtTop = (target: EventTarget | null) => {

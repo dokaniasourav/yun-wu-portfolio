@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Instagram, Linkedin, Mail, Menu, X } from 'lucide-react';
+import { Instagram, Linkedin, Mail, Menu, X, ChevronDown } from 'lucide-react';
 import { ViewState, NavItem } from '../types';
 import { WaveDecoration } from './WaveDecoration';
 import ProjectFlow from './ProjectFlow';
@@ -17,11 +17,19 @@ interface MainContentProps {
 
 const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [homeExpanded, setHomeExpanded] = useState(
+    activeView === ViewState.PHOTOGRAPHY || activeView === ViewState.DESIGN
+  );
 
   const navItems: NavItem[] = [
     { label: 'Home', view: ViewState.HOME },
     { label: 'About', view: ViewState.ABOUT },
     { label: 'Project Flow', view: ViewState.PROJECT_FLOW },
+  ];
+
+  const homeSubItems = [
+    { label: 'Design', view: ViewState.DESIGN },
+    { label: 'Photography', view: ViewState.PHOTOGRAPHY },
   ];
 
   const renderBodyContent = () => {
@@ -64,24 +72,76 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
         <div id="main-card-header" className="grid grid-cols-1 md:grid-cols-3 p-8 md:p-16 pb-4 md:pb-8 items-start">
 
           {/* Left Column: Navigation */}
-          <nav id="main-card-nav" className="hidden md:flex flex-col space-y-8 items-start h-full justify-center">
+          <nav id="main-card-nav" className="hidden md:flex flex-col space-y-6 items-start h-full justify-center">
             {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => onNavigate(item.view)}
-                className="flex items-center group w-fit text-left focus:outline-none"
-              >
-                <span
-                  className={`w-3 h-3 rounded-sm bg-coral mr-4 transition-all duration-300 ${activeView === item.view ? 'opacity-100 scale-100' : 'opacity-0 group-hover:opacity-40 scale-0 group-hover:scale-75'
-                    }`}
-                />
-                <span
-                  className={`${TYPOGRAPHY.navItem} transition-colors duration-300 ${activeView === item.view ? 'text-gray-900 font-medium' : 'text-gray-500 group-hover:text-coral'
-                    }`}
+              <div key={item.label} className="w-full">
+                <button
+                  onClick={() => {
+                    if (item.view === ViewState.HOME) {
+                      setHomeExpanded(!homeExpanded);
+                    }
+                    onNavigate(item.view);
+                  }}
+                  className="flex items-center group w-fit text-left focus:outline-none"
                 >
-                  {item.label}
-                </span>
-              </button>
+                  <span
+                    className={`w-3 h-3 rounded-sm bg-coral mr-4 transition-all duration-300 ${activeView === item.view || (item.view === ViewState.HOME && (activeView === ViewState.PHOTOGRAPHY || activeView === ViewState.DESIGN))
+                      ? 'opacity-100 scale-100'
+                      : 'opacity-0 group-hover:opacity-40 scale-0 group-hover:scale-75'
+                      }`}
+                  />
+                  <span
+                    className={`${TYPOGRAPHY.navItem} transition-colors duration-300 ${activeView === item.view || (item.view === ViewState.HOME && (activeView === ViewState.PHOTOGRAPHY || activeView === ViewState.DESIGN))
+                      ? 'text-gray-900 font-medium'
+                      : 'text-gray-500 group-hover:text-coral'
+                      }`}
+                  >
+                    {item.label}
+                  </span>
+                  {item.view === ViewState.HOME && (
+                    <ChevronDown
+                      size={20}
+                      className={`ml-2 transition-transform duration-300 ${homeExpanded ? 'rotate-180' : ''
+                        } ${activeView === ViewState.HOME || activeView === ViewState.PHOTOGRAPHY || activeView === ViewState.DESIGN
+                          ? 'text-gray-900'
+                          : 'text-gray-500 group-hover:text-coral'
+                        }`}
+                    />
+                  )}
+                </button>
+
+                {item.view === ViewState.HOME && (
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${homeExpanded ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                      }`}
+                  >
+                    <div className="ml-7 mt-4 space-y-4">
+                      {homeSubItems.map((subItem) => (
+                        <button
+                          key={subItem.label}
+                          onClick={() => onNavigate(subItem.view)}
+                          className="flex items-center group w-fit text-left focus:outline-none"
+                        >
+                          <span
+                            className={`w-2 h-2 rounded-sm bg-coral mr-3 transition-all duration-300 ${activeView === subItem.view
+                              ? 'opacity-100 scale-100'
+                              : 'opacity-0 group-hover:opacity-40 scale-0 group-hover:scale-75'
+                              }`}
+                          />
+                          <span
+                            className={`font-sans text-xl md:text-2xl font-light transition-colors duration-300 ${activeView === subItem.view
+                              ? 'text-gray-900 font-medium'
+                              : 'text-gray-500 group-hover:text-coral'
+                              }`}
+                          >
+                            {subItem.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
