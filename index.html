@@ -77,6 +77,26 @@
           transform: translateX(var(--marquee-distance));
         }
       }
+
+      @keyframes scroll-up {
+        from {
+          transform: translateY(0);
+        }
+
+        to {
+          transform: translateY(-33.333%);
+        }
+      }
+
+      @keyframes scroll-down {
+        from {
+          transform: translateY(-33.333%);
+        }
+
+        to {
+          transform: translateY(0);
+        }
+      }
     </style>
     <script type="importmap">
 {

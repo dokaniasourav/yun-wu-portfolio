@@ -1,6 +1,4 @@
-
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TYPOGRAPHY, COLORS } from '../styles';
 
 // Portrait-oriented photos for waterfall layout with metadata
@@ -27,31 +25,6 @@ const photoAssets = [
 
 const Photography: React.FC = () => {
   const [columnCount, setColumnCount] = useState(2);
-  const [isVisible, setIsVisible] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const columnRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const scrollPositions = useRef<number[]>([0, 0, 0, 0]);
-  const animating = useRef<boolean[]>([true, true, true, true]);
-  const initializedRef = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0 }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     const updateColumnCount = () => {
@@ -69,51 +42,6 @@ const Photography: React.FC = () => {
     return () => window.removeEventListener('resize', updateColumnCount);
   }, []);
 
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      for (let i = 0; i < columnCount; i++) {
-        const colRef = columnRefs.current[i];
-        if (colRef && animating.current[i]) {
-          const direction = i % 2 === 0 ? -0.5 : 0.5;
-          scrollPositions.current[i] += direction;
-          const colHeight = colRef.scrollHeight / 3;
-
-          if (direction < 0 && Math.abs(scrollPositions.current[i]) >= colHeight) {
-            scrollPositions.current[i] = 0;
-          } else if (direction > 0 && scrollPositions.current[i] >= 0) {
-            scrollPositions.current[i] = -colHeight;
-          }
-
-          colRef.style.transform = `translateY(${scrollPositions.current[i]}px)`;
-        }
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    if (!initializedRef.current && columnCount > 1) {
-      for (let i = 0; i < columnCount; i++) {
-        if (i % 2 === 1 && columnRefs.current[i]) {
-          const colHeight = columnRefs.current[i]!.scrollHeight / 3;
-          scrollPositions.current[i] = -colHeight;
-          columnRefs.current[i]!.style.transform = `translateY(${scrollPositions.current[i]}px)`;
-        }
-      }
-      initializedRef.current = true;
-    }
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [columnCount, isVisible]);
-
   const splitPhotosIntoColumns = (count: number) => {
     const columns: (typeof photoAssets)[] = Array.from({ length: count }, () => []);
     photoAssets.forEach((photo, index) => {
@@ -127,15 +55,23 @@ const Photography: React.FC = () => {
   const renderColumn = (photos: (typeof photoAssets), columnIndex: number) => (
     <div key={columnIndex} className="overflow-hidden">
       <div
-        ref={(el) => { columnRefs.current[columnIndex] = el; }}
         className="flex flex-col gap-4"
-        onMouseEnter={() => (animating.current[columnIndex] = false)}
-        onMouseLeave={() => (animating.current[columnIndex] = true)}
+        style={{
+          animation: `scroll-${columnIndex % 2 === 0 ? 'up' : 'down'} 60s linear infinite`,
+        }}
       >
         {photos.map((photo, index) => (
           <div
             key={`col${columnIndex}-${photo.id}-${index}`}
             className="rounded-lg overflow-hidden shadow-sm transition-all duration-300 group relative cursor-pointer border-2 border-transparent hover:border-gray-400"
+            onMouseEnter={(e) => {
+              const parent = e.currentTarget.parentElement;
+              if (parent) parent.style.animationPlayState = 'paused';
+            }}
+            onMouseLeave={(e) => {
+              const parent = e.currentTarget.parentElement;
+              if (parent) parent.style.animationPlayState = 'running';
+            }}
           >
             <img
               src={photo.src}
@@ -157,7 +93,7 @@ const Photography: React.FC = () => {
   );
 
   return (
-    <div id="photography-root" ref={containerRef} data-debug="photography-root" className="w-full">
+    <div id="photography-root" data-debug="photography-root" className="w-full">
       <div id="photography-header" data-debug="photography-header" className="mb-12 text-center">
         <p data-debug="photography-intro" className={`${TYPOGRAPHY.body} ${COLORS.gray500}`}>
           Capturing moments of silence, texture, and light. A collection of works exploring the relationship between natural landscapes and human perception.
