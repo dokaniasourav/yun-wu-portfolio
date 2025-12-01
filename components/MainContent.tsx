@@ -9,53 +9,55 @@ import Design from './Design';
 import About from './About';
 import Home from './Home';
 import { COLORS, TYPOGRAPHY, LAYOUT } from '../styles';
+import { Language } from '../App';
 
 interface MainContentProps {
   activeView: ViewState;
   onNavigate: (view: ViewState) => void;
+  language: Language;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => {
+const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate, language }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [homeExpanded, setHomeExpanded] = useState(
     activeView === ViewState.PHOTOGRAPHY || activeView === ViewState.DESIGN
   );
 
   const navItems: NavItem[] = [
-    { label: 'Home', view: ViewState.HOME },
-    { label: 'About', view: ViewState.ABOUT },
-    { label: 'Project Flow', view: ViewState.PROJECT_FLOW },
+    { label: language === 'en' ? 'Home' : '主页', view: ViewState.HOME },
+    { label: language === 'en' ? 'About' : '关于', view: ViewState.ABOUT },
+    { label: language === 'en' ? 'Project Flow' : '项目流程', view: ViewState.PROJECT_FLOW },
   ];
 
   const homeSubItems = [
-    { label: 'Design', view: ViewState.DESIGN },
-    { label: 'Photography', view: ViewState.PHOTOGRAPHY },
+    { label: language === 'en' ? 'Design' : '设计', view: ViewState.DESIGN },
+    { label: language === 'en' ? 'Photography' : '摄影', view: ViewState.PHOTOGRAPHY },
   ];
 
   const renderBodyContent = () => {
     switch (activeView) {
       case ViewState.PROJECT_FLOW:
-        return <ProjectFlow />;
+        return <ProjectFlow language={language} />;
       case ViewState.ABOUT:
-        return <About />;
+        return <About language={language} />;
       case ViewState.PHOTOGRAPHY:
-        return <Photography />;
+        return <Photography language={language} />;
       case ViewState.DESIGN:
-        return <Design />;
+        return <Design language={language} />;
       case ViewState.HOME:
       default:
-        return <Home onNavigate={onNavigate} />;
+        return <Home onNavigate={onNavigate} language={language} />;
     }
   };
 
   const getCenterTitle = () => {
     switch (activeView) {
       case ViewState.ABOUT:
-        return 'About';
+        return language === 'en' ? 'About' : '关于';
       case ViewState.PROJECT_FLOW:
-        return 'Progress';
+        return language === 'en' ? 'Progress' : '进度';
       case ViewState.PHOTOGRAPHY:
-        return 'Gallery';
+        return language === 'en' ? 'Gallery' : '画廊';
       case ViewState.HOME:
       default:
         return 'Yun Wu';
@@ -227,4 +229,3 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate }) => 
 };
 
 export default MainContent;
-

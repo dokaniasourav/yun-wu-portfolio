@@ -23,7 +23,13 @@ const photoAssets = [
   { id: 18, src: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?auto=format&fit=crop&w=600&h=900&q=80', alt: 'Portrait 18', title: 'Contemporary', artist: 'Daniel White', season: 'Winter 2024' },
 ];
 
-const Photography: React.FC = () => {
+import { Language } from '../App';
+
+interface PhotographyProps {
+  language: Language;
+}
+
+const Photography: React.FC<PhotographyProps> = ({ language }) => {
   const [columnCount, setColumnCount] = useState(2);
 
   useEffect(() => {
@@ -92,11 +98,15 @@ const Photography: React.FC = () => {
     </div>
   );
 
+  const intro = language === 'en' 
+    ? 'Capturing moments of silence, texture, and light. A collection of works exploring the relationship between natural landscapes and human perception.'
+    : '捕捉沉默、质感和光的瞬间。探索自然景观与人类感知之间关系的作品集。';
+
   return (
     <div id="photography-root" data-debug="photography-root" className="w-full">
       <div id="photography-header" data-debug="photography-header" className="mb-12 text-center">
         <p data-debug="photography-intro" className={`${TYPOGRAPHY.body} ${COLORS.gray500}`}>
-          Capturing moments of silence, texture, and light. A collection of works exploring the relationship between natural landscapes and human perception.
+          {intro}
         </p>
       </div>
 
@@ -108,4 +118,3 @@ const Photography: React.FC = () => {
 };
 
 export default Photography;
-

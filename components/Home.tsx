@@ -3,13 +3,36 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { ViewState } from '../types';
 import { TYPOGRAPHY, COLORS } from '../styles';
+import { Language } from '../App';
 
 interface HomeProps {
   onNavigate: (view: ViewState) => void;
+  language: Language;
 }
 
-const Home: React.FC<HomeProps> = ({ onNavigate }) => {
+const Home: React.FC<HomeProps> = ({ onNavigate, language }) => {
   const [currentTime, setCurrentTime] = useState('');
+
+  const text = {
+    en: {
+      design: 'Design',
+      photography: 'Photography',
+      sendEmail: 'Send Email',
+      call: 'Call, text, WhatsApp',
+      location: 'Currently based in Seattle, WA',
+      view: 'View'
+    },
+    zh: {
+      design: '设计',
+      photography: '摄影',
+      sendEmail: '发送邮件',
+      call: '电话、短信、WhatsApp',
+      location: '目前在西雅图',
+      view: '查看'
+    }
+  };
+
+  const t = text[language];
 
   useEffect(() => {
     const updateTime = () => {
@@ -35,7 +58,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         {label}
       </span>
       <div className={`flex items-center font-sans text-lg md:text-xl font-light leading-relaxed ${COLORS.gray400} group-hover:text-coral transition-colors mt-2 md:mt-0`}>
-        <span>View</span>
+        <span>{language === 'en' ? 'View' : '查看'}</span>
         <ArrowRight size={20} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
       </div>
     </div>
@@ -57,14 +80,14 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
     <div id="home-root" data-debug="home-root" className="flex flex-col justify-end space-y-8 md:space-y-10 w-full min-h-[40vh]">
       {/* Navigation and Contact Rows */}
       <div className="flex flex-col space-y-4">
-        <NavRow label="Design" onClick={() => onNavigate(ViewState.DESIGN)} />
-        <NavRow label="Photography" onClick={() => onNavigate(ViewState.PHOTOGRAPHY)} />
+        <NavRow label={t.design} onClick={() => onNavigate(ViewState.DESIGN)} />
+        <NavRow label={t.photography} onClick={() => onNavigate(ViewState.PHOTOGRAPHY)} />
 
-        <ContactRow label="Send Email" value="Yunwustudio@gmail.com" href="mailto:Yunwustudio@gmail.com" />
-        <ContactRow label="Call, text, WhatsApp" value="+1 4258372524" href="tel:+14258372524" />
+        <ContactRow label={t.sendEmail} value="Yunwustudio@gmail.com" href="mailto:Yunwustudio@gmail.com" />
+        <ContactRow label={t.call} value="+1 4258372524" href="tel:+14258372524" />
         <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-transparent pb-2">
           <span className={`font-sans text-xl md:text-2xl font-light ${COLORS.gray500}`}>
-            Currently based in Seattle, WA
+            {t.location}
           </span>
           <span className={`font-sans text-lg md:text-xl font-light leading-relaxed text-coral font-mono mt-2 md:mt-0`}>
             {currentTime}

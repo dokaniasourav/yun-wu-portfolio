@@ -3,13 +3,15 @@ import React, { useState, useEffect } from 'react';
 import Typewriter from './Typewriter';
 import { ChevronDown } from 'lucide-react';
 import { TYPOGRAPHY, COLORS } from '../styles';
+import { Language } from '../App';
 
 interface SplashProps {
   isVisible: boolean;
   onDismiss: () => void;
+  language: Language;
 }
 
-const Splash: React.FC<SplashProps> = ({ isVisible, onDismiss }) => {
+const Splash: React.FC<SplashProps> = ({ isVisible, onDismiss, language }) => {
   // Key to force re-render (and thus reset) of Typewriter component
   const [typewriterKey, setTypewriterKey] = useState(0);
 
@@ -37,7 +39,7 @@ const Splash: React.FC<SplashProps> = ({ isVisible, onDismiss }) => {
         <div className={`text-lg md:text-2xl text-darkgray tracking-wide text-center min-h-[3rem]`}>
           <Typewriter
             key={typewriterKey}
-            text="Hi Yun 专注于视觉叙事、创意影像和艺术表达。"
+            text={language === 'en' ? "Hi, I am Yun, focusing on visual storytelling, creative imagery, and artistic expression. " : "Hi Yun 专注于视觉叙事、创意影像和艺术表达。"}
             startDelay={800}
           />
         </div>
@@ -46,7 +48,9 @@ const Splash: React.FC<SplashProps> = ({ isVisible, onDismiss }) => {
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 animate-bounce cursor-pointer" onClick={onDismiss}>
         <div className={`flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity`}>
-          <span className={TYPOGRAPHY.small + " text-gray-400"}>Scroll to Enter</span>
+          <span className={TYPOGRAPHY.small + " text-gray-400"}>
+            {language === 'en' ? 'Scroll to Enter' : '滚动进入'}
+          </span>
           <ChevronDown className={COLORS.coral} size={24} />
         </div>
       </div>
