@@ -29,9 +29,17 @@ const AppContent: React.FC = () => {
     return location.pathname === '/';
   });
   const [lastScrollTime, setLastScrollTime] = useState(0);
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    const savedLanguage = localStorage.getItem('language');
+    return (savedLanguage === 'en' || savedLanguage === 'zh') ? savedLanguage : 'en';
+  });
 
   const activeView = getViewFromPath(location.pathname);
+
+  // Save language preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
 
   useEffect(() => {
     sessionStorage.setItem('showSplash', showSplash.toString());
