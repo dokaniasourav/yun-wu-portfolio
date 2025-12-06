@@ -257,7 +257,7 @@ npm run build
 
 - Email: [Yunwustudio@gmail.com](mailto:Yunwustudio@gmail.com)
 - Phone: +1 425-837-2524
-- Instagram: [@yun__wu](https://instagram.com/yun__wu)
+- Instagram: [@yun___wu](https://instagram.com/yun___wu)
 - LinkedIn: [yun-w-0532b5190](https://linkedin.com/in/yun-w-0532b5190)
 
 **Project Link**: [https://github.com/dokaniasourav/yun-wu-portfolio](https://github.com/dokaniasourav/yun-wu-portfolio)

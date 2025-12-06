@@ -164,7 +164,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate, langu
             <a href="mailto:Yunwustudio@gmail.com" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
               <Mail size={32} strokeWidth={1.5} />
             </a>
-            <a href="https://instagram.com/yun__wu" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
+            <a href="https://instagram.com/yun___wu" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
               <Instagram size={32} strokeWidth={1.5} />
             </a>
             <a href="https://linkedin.com/in/yun-w-0532b5190" target="_blank" rel="noreferrer" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
@@ -216,7 +216,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate, langu
             <div className="flex gap-8 mt-4 md:mt-0">
               <a href="mailto:Yunwustudio@gmail.com" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>EMAIL</a>
               <span className="hidden md:inline text-gray-200">|</span>
-              <a href="https://instagram.com/yun__wu" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>INSTAGRAM</a>
+              <a href="https://instagram.com/yun___wu" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>INSTAGRAM</a>
               <span className="hidden md:inline text-gray-200">|</span>
               <a href="https://linkedin.com/in/yun-w-0532b5190" className={`hover:text-coral hover:underline transition-colors ${TYPOGRAPHY.small}`}>LINKEDIN</a>
             </div>
