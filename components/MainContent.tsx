@@ -188,7 +188,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate, langu
           </div>
 
           {/* Right Column: Social Icons */}
-          <div className="hidden md:flex flex-col space-y-8 items-end h-full justify-center pt-2">
+          <div className="hidden md:flex flex-col space-y-6 items-end h-full justify-center">
             <a href="mailto:Yunwustudio@gmail.com" className={`${COLORS.coral} hover:scale-110 transition-transform p-1`}>
               <Mail size={32} strokeWidth={1.5} />
             </a>
@@ -239,7 +239,7 @@ const MainContent: React.FC<MainContentProps> = ({ activeView, onNavigate, langu
           </div>
 
           {/* === FOOTER (Outside content container to align with header) === */}
-          <footer id="main-card-footer" className="px-8 md:px-16 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center text-gray-300 font-light mt-16">
+          <footer id="main-card-footer" className="px-8 md:px-16 md:py-12 mb-24 flex flex-col md:flex-row justify-between items-center text-gray-300 font-light mt-16">
             <div className={`${TYPOGRAPHY.body} text-lg tracking-wide text-gray-300`}>2025 Yun Wu</div>
             {/* Mobile: Icon + text pairs, Desktop: Text only with separators */}
             <div className="flex gap-8 mt-4 md:mt-0">
