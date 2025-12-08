@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import { TYPOGRAPHY, COLORS } from '../styles';
 import { Language } from '../App';
+import OrbitalSystem from './ProjectFlowOrbit';
 
 interface ProjectFlowProps {
   language: Language;
 }
 
 const ProjectFlow: React.FC<ProjectFlowProps> = ({ language }) => {
+  const [expandedPhase, setExpandedPhase] = useState<number | null>(null);
+
   const content = {
     en: {
       intro: "Hey! I'm Yun Wu, a designer who loves turning ideas into something beautiful and functional. Every project is unique, but here's how I usually roll with clients – think of it as our collaborative adventure. I believe great design is about simplicity: making things intuitive, delightful, and effective. Let's make your vision pop!",
@@ -30,9 +35,10 @@ const ProjectFlow: React.FC<ProjectFlowProps> = ({ language }) => {
         },
         {
           title: 'Hi-Fi Polish',
-          description: "Finally, we go full color: style guides, fonts, icons, and all the juicy details. Pages come to life with Bootstrap vibes if needed, or custom flair."
+          description: "Finally, we go full color: style guides, fonts, icons, and all the juicy details. Pages come to life with custom flair."
         }
       ],
+      clickToLearn: 'Click to learn more',
       faqs: [
         {
           question: 'How long does a project take?',
@@ -51,8 +57,6 @@ const ProjectFlow: React.FC<ProjectFlowProps> = ({ language }) => {
           answer: "Health, government, e-commerce, automotive, insurance... you name it, I've probably designed for it!"
         }
       ],
-      more: 'More....',
-      moreDesc: 'My site is always evolving, just like my designs. Stay tuned for more updates!'
     },
     zh: {
       intro: '嘿！我是吴云，一个喜欢把想法变成美丽而实用的东西的设计师。每个项目都是独特的，但这是我通常与客户合作的方式——把它想象成我们的协作冒险。我相信伟大的设计在于简洁：让事物直观、令人愉悦且有效。让我们实现您的愿景！',
@@ -76,9 +80,10 @@ const ProjectFlow: React.FC<ProjectFlowProps> = ({ language }) => {
         },
         {
           title: '高保真润色',
-          description: '最后，我们全彩呈现：风格指南、字体、图标和所有精彩细节。如果需要，页面会以Bootstrap风格栩栩如生，或定制风格。'
+          description: '最后，我们全彩呈现：风格指南、字体、图标和所有精彩细节。页面以定制风格栩栩如生。'
         }
       ],
+      clickToLearn: '点击了解更多',
       faqs: [
         {
           question: '项目需要多长时间？',
@@ -97,48 +102,67 @@ const ProjectFlow: React.FC<ProjectFlowProps> = ({ language }) => {
           answer: '健康、政府、电子商务、汽车、保险……你能想到的，我可能都设计过！'
         }
       ],
-      more: '更多....',
-      moreDesc: '我的网站一直在发展，就像我的设计一样。敬请期待更多更新！'
     }
   };
 
   const t = content[language];
 
+  // Double the phases to get 10 cards total
+  const doublePhases = [...t.phases, ...t.phases];
+
+  const handlePhaseClick = (index: number) => {
+    setExpandedPhase(expandedPhase === index ? null : index);
+  };
+
   return (
     <div id="projectflow-root" className="w-full">
-      {/* Design Flow Header */}
-      <div id="design-flow" className="text-center mb-16">
+      {/* Intro Text */}
+      <div id="design-flow" className="text-center mb-16 max-w-3xl mx-auto">
         <p className={`${TYPOGRAPHY.body} ${COLORS.gray600}`}>
           {t.intro}
         </p>
       </div>
 
-      {/* Our Journey */}
-      <div id="our-journey" className="mb-16">
-        <h2 className="text-4xl md:text-5xl font-serif text-coral mb-12 text-center">
+      {/* Our Journey Title */}
+      <div className="text-center mb-12">
+        <h2 className="text-4xl md:text-5xl font-serif text-coral">
           {t.ourJourney}
         </h2>
-        
-        <div className="space-y-8 max-w-3xl mx-auto">
-          {t.phases.map((phase, index) => (
-            <div 
-              key={index} 
-              className="bg-white rounded-xl p-8 border border-gray-200 hover:border-coral transition-colors"
-            >
-              <h3 className="text-2xl font-sans text-coral font-medium mb-4 text-center">
-                {phase.title}
-              </h3>
-              <p className={`${TYPOGRAPHY.bodySmall} ${COLORS.gray600} leading-relaxed text-center`}>
-                {phase.description}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
 
-      {/* FAQ Section */}
-      <div id="faq-section" className="mb-16">
-        <div className="space-y-6">
+      {/* 3D Three.js Orbital Container */}
+      <div className="relative w-full h-[600px] md:h-[700px] mb-24">
+        <Canvas
+          camera={{ position: [0, 0, 12], fov: 50 }}
+          style={{ background: 'transparent' }}
+        >
+          {/* Simple lighting */}
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 5, 5]} intensity={0.5} />
+          
+          <OrbitalSystem
+            phases={doublePhases}
+            expandedPhase={expandedPhase}
+            onPhaseClick={handlePhaseClick}
+            language={language}
+          />
+          {/* OrbitControls for dragging and rotating */}
+          <OrbitControls
+            enablePan={false}
+            enableZoom={true}
+            minDistance={8}
+            maxDistance={20}
+            autoRotate={false}
+          />
+        </Canvas>
+      </div>
+
+      {/* FAQ Section - Hidden for now, can be shown later */}
+      <div id="faq-section" className="hidden mb-16">
+        <h2 className="text-3xl md:text-4xl font-serif text-coral mb-8 text-center">
+          FAQ
+        </h2>
+        <div className="space-y-6 max-w-3xl mx-auto">
           {t.faqs.map((faq, index) => (
             <div key={index} className="border-b border-gray-200 pb-6 last:border-b-0">
               <h3 className={`${TYPOGRAPHY.h3} ${COLORS.gray900} mb-3`}>
@@ -150,16 +174,6 @@ const ProjectFlow: React.FC<ProjectFlowProps> = ({ language }) => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* More Section */}
-      <div id="more-section" className="text-center py-12">
-        <h2 className="text-6xl md:text-7xl font-serif text-gray-200 mb-4">
-          {t.more}
-        </h2>
-        <p className={`${TYPOGRAPHY.bodySmall} ${COLORS.gray400}`}>
-          {t.moreDesc}
-        </p>
       </div>
     </div>
   );
